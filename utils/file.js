@@ -1,6 +1,8 @@
 'use strict';
 var fs = require('fs');
 var path = require('path');
+var pathToRegexp = require('path-to-regexp');
+var re = pathToRegexp('/foo/:bar');
 
 exports.eachFileSync = function(dir, callback) {
 	var stats = fs.statSync(dir);
@@ -11,7 +13,9 @@ exports.eachFileSync = function(dir, callback) {
 			exports.eachFileSync(f, callback);
 		});
 	} else {
-		callback(dir, stats);
+		if (re.test(dir)) {
+			callback(dir, stats);
+		}
 	}
 }
 
